@@ -7,6 +7,7 @@ rule compile_cost_assumptions:
         pypsa_costs = "inputs/costs_PyPSA.csv",
         fraunhofer_costs = "inputs/Fraunhofer_ISE_costs.csv",
         fraunhofer_energy_prices = "inputs/Fraunhofer_ISE_energy_prices.csv",
+        fraunhofer_transport_costs = "inputs/Fraunhofer_ISE_transport_costs.csv",
         EWG_costs = "inputs/EWG_costs.csv",
         dea_transport = "inputs/energy_transport_data_sheet_dec_2017.xlsx",
         dea_renewable_fuels = "inputs/data_sheets_for_renewable_fuels.xlsx",
@@ -33,6 +34,17 @@ rule compile_cost_assumptions:
 #     resources: mem=500
 #     conda: "environment.yaml"
 #     script: "scripts/convert_pdf_fraunhofer_to_dataframe.py"
+
+
+rule convert_fraunhofer_transport:
+    input:
+        fraunhofer = "docu/Anhang-Studie-Wege-zu-einem-klimaneutralen-Energiesystem.pdf"
+    output:
+        costs = "inputs/Fraunhofer_ISE_transport_costs.csv",
+    threads: 1
+    resources: mem=500
+    conda: "environment.yaml"
+    script: "scripts/convert_pdf_fraunhofer_to_transport_dataframe.py"
 
 
 rule convert_EWG:
