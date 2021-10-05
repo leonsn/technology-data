@@ -27,14 +27,13 @@ The script is structured as follows:
 
 import pandas as pd
 import numpy as np
-
-years = snakemake.config['years']
+import os
 
 # ---------- sources -------------------------------------------------------
 source_dict = {
                 'DEA': 'Danish Energy Agency',
                 # solar utility
-                'Vartiaien': 'Impact of weighted average cost of capital, capital expenditure, and other parameters on future utility‐scale PV levelised cost of electricity',
+                'Vartiaien': 'Impact of weighted average cost of capital, capital expenditure, and other parameters on future utility-scale PV levelised cost of electricity',
                 # solar rooftop
                 'ETIP': 'European PV Technology and Innovation Platform',
                 # nuclear, coal, lignite
@@ -252,7 +251,7 @@ def get_data_DEA(tech, data_in, expectation=None):
                   "Cv coefficient",
                   "Distribution network costs", "Technical life",
                   "Energy storage expansion cost",
-                  'Output capacity expansion cost (M€2015/MW)',
+                  'Output capacity expansion cost (M\u20ac2015/MW)',
                   'Heat input', 'Heat  input', 'Electricity input', 'Eletricity input', 'Heat out',
                   'capture rate', 
                   "FT Liquids Output, MWh/MWh Total Input"]
@@ -264,7 +263,7 @@ def get_data_DEA(tech, data_in, expectation=None):
         attr = excel[[para in index for index in excel.index]]
         if len(attr) != 0:
             df = df.append(attr)
-    df.index = df.index.str.replace('€', 'EUR')
+    df.index = df.index.str.replace('\u20ac', 'EUR')
 
     df = df.reindex(columns=df.columns[df.columns.isin(years)])
     df = df[~df.index.duplicated(keep='first')]
@@ -1054,8 +1053,8 @@ def add_carbon_capture(data, tech_data):
         name_list = [('C2) Eletricity input ',"electricity-input"),
                      ('C1) Heat  input ',"heat-input"),
                      ('C1) Heat out ','heat-output'),
-                     ('CO₂ compression and dehydration - Electricity input',"compression-electricity-input"),
-                     ('CO₂ compression and dehydration - Heat out',"compression-heat-output")]
+                     ('CO\u2082 compression and dehydration - Electricity input',"compression-electricity-input"),
+                     ('CO\u2082 compression and dehydration - Heat out',"compression-heat-output")]
 
         for dea_name, our_name in name_list:
             data.loc[(tech,our_name), years] = tech_data.loc[(tech,dea_name), years].values[0]
@@ -1125,7 +1124,11 @@ def rename_ISE(costs_ISE):
     """
     costs_ISE.rename(index = {"Investition": "investment",
                           "Lebensdauer": "lifetime",
-                          "M/O-Kosten": "FOM"},
+                          "M/O-Kosten": "FOM",
+                          "Wirkungsgrad*": "efficiency",
+                          "Wirkungsgrad Batterie*": "battery efficiency",
+                          "Batteriekapazit\u00E4t": "battery capacity",
+                          "Anteil Batterie Fahrleistung": "battery drive amount"},
                  columns = {"Einheit": "unit",
                             "2020": 2020,
                             "2025": 2025,
@@ -1140,6 +1143,28 @@ def rename_ISE(costs_ISE):
     costs_ISE['further description'] = costs_ISE.reset_index()["technology"].values
 
     return costs_ISE
+
+def rename_ISE_vehicles(transport_costs_ISE):
+    """
+    rename ISE vehicles after renaming the ISE costs
+    """
+    transport_costs_ISE = rename_ISE(transport_costs_ISE)
+    
+    tdict = {'LKW Batterie- Elektromotor': 'truck battery EV', 
+             'LKW H2- Brennstoffzelle': 'truck fuelcell EV',
+             'LKW Hybrid H2- Brennstoffzelle / Batterie': 'truck hybrid fuelcell battery',
+             'LKW Hybrid ICE Fl\u00FCssigtreibstoff / Batterie': 'truck hybrid conventional battery',
+             'LKW Hybrid ICE Gas/Batterie': 'truck hybrid gas battery', 
+             'LKW ICE Gas': 'truck gas ICE',
+             'LKW ICE- Fl\u00FCssigtreibstoff': 'truck conventional ICE',
+             'PKW Batterie- Elektromotor': 'car battery EV',
+             'PKW H2- Brennstoffzelle': 'car fuelcell EV', 
+             'PKW Hybrid H2- Brennstoffzelle / Batterie': 'car hybrid fuelcell battery',
+             'PKW Hybrid ICE Fl\u00FCssigtreibstoff / Batterie': 'car hybrid conventional battery',
+             'PKW Hybrid ICE Gas / Batterie': 'car hybrid gas battery', 
+             'PKW ICE Gas': 'car gas ICE',
+             'PKW ICE- Fl\u00FCssigtreibstoff': 'car conventional ICE'}
+    return transport_costs_ISE.rename(index = tdict)
 
 
 def add_home_battery_costs(costs):
@@ -1213,146 +1238,161 @@ def add_home_battery_costs(costs):
     home_battery["source"] = home_battery["source"].apply(lambda x: source_dict["EWG"] + ", " + x)
 
     return pd.concat([costs, home_battery])
+
+
 # %% *************************************************************************
 #  ---------- MAIN ------------------------------------------------------------
-# for testing
-if 'snakemake' not in globals():
-    from vresutils.snakemake import MockSnakemake
-    snakemake = MockSnakemake(
-        input=dict(
-                    pypsa_costs = "inputs/costs_PyPSA.csv",
-                    fraunhofer_costs = "inputs/Fraunhofer_ISE_costs.csv",
-                    fraunhofer_energy_prices = "inputs/Fraunhofer_ISE_energy_prices.csv",
-                    EWG_costs = "inputs/EWG_costs.csv",
-                    dea_transport = "inputs/energy_transport_data_sheet_dec_2017.xlsx",
-                    dea_renewable_fuels = "inputs/data_sheets_for_renewable_fuels.xlsx",
-                    dea_storage = "inputs/technology_data_catalogue_for_energy_storage.xlsx",
-                    dea_generation = "inputs/technology_data_for_el_and_dh_-_0009.xlsx",
-                    dea_heating = "inputs/technologydatafor_heating_installations_marts_2018.xlsx",
-                    dea_industrial = "inputs/technology_data_for_industrial_process_heat_0002.xlsx"
-        ),
-        output=["outputs/costs_{}.csv".format(year) for year in [2020, 2025, 2030, 2035, 2040, 2045, 2050]]
+if __name__ == "__main__":
+    # for testing
+    if 'snakemake' not in globals():
+        from vresutils.snakemake import MockSnakemake
+        snakemake = MockSnakemake(
+            input=dict(
+                        pypsa_costs = "inputs/costs_PyPSA.csv",
+                        fraunhofer_costs = "inputs/Fraunhofer_ISE_costs.csv",
+                        fraunhofer_energy_prices = "inputs/Fraunhofer_ISE_energy_prices.csv",
+                        fraunhofer_transport_costs = "inputs/Fraunhofer_ISE_transport_costs.csv",
+                        EWG_costs = "inputs/EWG_costs.csv",
+                        dea_transport = "inputs/energy_transport_data_sheet_dec_2017.xlsx",
+                        dea_renewable_fuels = "inputs/data_sheets_for_renewable_fuels.xlsx",
+                        dea_storage = "inputs/technology_data_catalogue_for_energy_storage.xlsx",
+                        dea_generation = "inputs/technology_data_for_el_and_dh_-_0009.xlsx",
+                        dea_heating = "inputs/technologydatafor_heating_installations_marts_2018.xlsx",
+                        dea_industrial = "inputs/technology_data_for_industrial_process_heat_0002.xlsx"
+            ),
+            output=["outputs/costs_{}.csv".format(year) for year in [2020, 2025, 2030, 2035, 2040, 2045, 2050]]
 
-    )
-    import yaml
-    with open('config.yaml', encoding='utf8') as f:
-        snakemake.config = yaml.safe_load(f)
-
-# (1) DEA data
-# (a)-------- get data from DEA excel sheets ----------------------------------
-# read excel sheet names of all excel files
-excel_files = [v for k,v in snakemake.input.items() if "dea" in k]
-data_in = get_excel_sheets(excel_files)
-# create dictionary with raw data from DEA sheets
-d_by_tech = get_data_from_DEA(data_in, expectation=snakemake.config["expectation"])
-# concat into pd.Dataframe
-tech_data = pd.concat(d_by_tech).sort_index()
-# clean up units
-tech_data = clean_up_units(tech_data)
-
-# (b) ------ specific assumptions for some technologies -----------------------
-
-# specify investment and efficiency assumptions for:
-# resistive heater, decentral gas boiler, biogas upgrading and heat pumps
-tech_data = set_specify_assumptions(tech_data)
-
-# round trip efficiency for hydrogen + battery storage
-tech_data = set_round_trip_efficiency(tech_data)
-
-# drop all rows which only contains zeros
-tech_data = tech_data.loc[(tech_data[years]!=0).sum(axis=1)!=0]
-
-# (c) -----  get tech data in pypsa syntax -----------------------------------
-# make categories: investment, FOM, VOM, efficiency, c_b, c_v
-data = order_data(tech_data)
-# add excel sheet names and further description
-data = add_description(data)
-# convert efficiency from %-> per unit and investment from MW->kW to compare
-data = convert_units(data)
-# add gas storage (different methodology than other sheets)
-data = add_gas_storage(data)
-# add carbon capture
-data = add_carbon_capture(data, tech_data)
-
-
-# %% (2) -- get data from other sources which need formatting -----------------
-# (a)  ---------- get old pypsa costs ---------------------------------------
-costs_pypsa = pd.read_csv(snakemake.input.pypsa_costs,
-                          index_col=[0,2]).sort_index()
-# rename some techs and convert units
-costs_pypsa = rename_pypsa_old(costs_pypsa)
-
-# (b) ------- add costs from Fraunhofer ISE study --------------------------
-costs_ISE = pd.read_csv(snakemake.input.fraunhofer_costs,
-                        engine="python",
-                        index_col=[0,1],
-                        encoding = "ISO-8859-1")
-# rename + reorder to fit to other data
-costs_ISE = rename_ISE(costs_ISE)
-# add costs for gas pipelines
-data = pd.concat([data, costs_ISE.loc[["Gasnetz"]]], sort=True)
-
-data = add_manual_input(data)
-# add costs for home batteries
-data = add_home_battery_costs(data)
-# %% (3) ------ add additional sources and save cost as csv ------------------
-# [RTD-target-multiindex-df]
-for year in years:
-    costs = (data[[year, "unit", "source", "further description"]]
-             .rename(columns={year: "value"}))
-    costs["value"] = costs["value"].astype(float)
-
-    # biomass is differentiated by biomass CHP and HOP
-    costs.loc[('solid biomass', 'fuel'), 'value'] = 25.2
-    costs.loc[('solid biomass', 'fuel'), 'unit'] = 'EUR/MWh_th'
-    costs.loc[('solid biomass', 'fuel'), 'source'] = source_dict["zappa"]
-
-    # add solar data from other source than DEA
-    if any([snakemake.config['solar_utility_from_vartiaien'], snakemake.config['solar_rooftop_from_etip']]):
-        costs = add_solar_from_other(costs)
+        )
+        import yaml
+        with open('../config.yaml', encoding='utf8') as f:
+            snakemake.config = yaml.safe_load(f)
     
-    # add desalination and clean water tank storage
-    costs = add_desalinsation_data(costs)
+    years = snakemake.config['years']
 
-    # add electrolyzer and fuel cell efficiency from other source than DEA
-    if snakemake.config['h2_from_budischak']:
-        costs = add_h2_from_other(costs)
+    # (1) DEA data
+    # (a)-------- get data from DEA excel sheets ----------------------------------
+    # read excel sheet names of all excel files
+    excel_files = [v for k,v in snakemake.input.items() if "dea" in k]
+    data_in = get_excel_sheets(excel_files)
+    # create dictionary with raw data from DEA sheets
+    d_by_tech = get_data_from_DEA(data_in, expectation=snakemake.config["expectation"])
+    # concat into pd.Dataframe
+    tech_data = pd.concat(d_by_tech).sort_index()
+    # clean up units
+    tech_data = clean_up_units(tech_data)
 
-    # add data from conventional carriers
-    costs = add_conventional_data(costs)
-    # CO2 intensity
-    costs = add_co2_intensity(costs)
+    # (b) ------ specific assumptions for some technologies -----------------------
 
-    # include old pypsa costs
-    check = pd.concat([costs_pypsa, costs], sort=True, axis=1)
+    # specify investment and efficiency assumptions for:
+    # resistive heater, decentral gas boiler, biogas upgrading and heat pumps
+    tech_data = set_specify_assumptions(tech_data)
 
-    # missing technologies
-    missing = costs_pypsa.index.levels[0].difference(costs.index.levels[0])
-    if (len(missing) & (year==years[0])):
-        print("************************************************************")
-        print("warning, in new cost assumptions the following components: ")
-        for i in range(len(missing)):
-            print("    ", i + 1, missing[i])
-        print(" are missing and the old cost assumptions are assumed.")
-        print("************************************************************")
+    # round trip efficiency for hydrogen + battery storage
+    tech_data = set_round_trip_efficiency(tech_data)
 
-    to_add = costs_pypsa.loc[missing].drop("year", axis=1)
-    to_add.loc[:,"further description"] = " from old pypsa cost assumptions"
-    costs_tot = pd.concat([costs, to_add], sort=False)
+    # drop all rows which only contains zeros
+    tech_data = tech_data.loc[(tech_data[years]!=0).sum(axis=1)!=0]
 
-    # single components missing
-    comp_missing = costs_pypsa.index.difference(costs_tot.index)
-    if (year==years[0]):
-        print("single parameters of technologies are missing, using old PyPSA assumptions: ")
-        print(comp_missing)
-        print("old c_v and c_b values are assumed where given")
-    to_add = costs_pypsa.loc[comp_missing].drop("year", axis=1)
-    to_add.loc[:, "further description"] = " from old pypsa cost assumptions"
-    costs_tot = pd.concat([costs_tot, to_add], sort=False)
+    # (c) -----  get tech data in pypsa syntax -----------------------------------
+    # make categories: investment, FOM, VOM, efficiency, c_b, c_v
+    data = order_data(tech_data)
+    # add excel sheet names and further description
+    data = add_description(data)
+    # convert efficiency from %-> per unit and investment from MW->kW to compare
+    data = convert_units(data)
+    # add gas storage (different methodology than other sheets)
+    data = add_gas_storage(data)
+    # add carbon capture
+    data = add_carbon_capture(data, tech_data)
 
-    # unify the cost from DIW2010
-    costs_tot = unify_diw(costs_tot)
-    costs_tot.drop("fixed", level=1, inplace=True)
-    costs_tot.sort_index(inplace=True)
-    costs_tot = round(costs_tot, ndigits=snakemake.config.get("ndigits", 2))
-    costs_tot.to_csv([v for v in snakemake.output if str(year) in v][0])
+
+    # %% (2) -- get data from other sources which need formatting -----------------
+    # (a)  ---------- get old pypsa costs ---------------------------------------
+    costs_pypsa = pd.read_csv(snakemake.input.pypsa_costs,
+                              index_col=[0,2]).sort_index()
+    # rename some techs and convert units
+    costs_pypsa = rename_pypsa_old(costs_pypsa)
+
+    # (b) ------- add costs from Fraunhofer ISE study --------------------------
+    costs_ISE = pd.read_csv(snakemake.input.fraunhofer_costs,
+                            engine="python",
+                            index_col=[0,1],
+                            encoding = "ISO-8859-1")
+    transport_costs_ISE = pd.read_csv(snakemake.input.fraunhofer_transport_costs,
+                                      engine="python",
+                                      index_col=[0,1],
+                                      encoding = "ISO-8859-1")
+    # rename + reorder to fit to other data
+    costs_ISE = rename_ISE(costs_ISE)
+    transport_costs_ISE = rename_ISE_vehicles(transport_costs_ISE)
+    # add costs for gas pipelines
+    data = pd.concat([data, costs_ISE.loc[["Gasnetz"]]], sort=True)
+    # add costs for vehicle types
+    data = pd.concat([data, transport_costs_ISE.loc[["car conventional ICE","car battery EV",
+                                                     "car fuelcell EV","truck conventional ICE",
+                                                     "truck battery EV","truck fuelcell EV"]]], sort=True)
+    
+    data = add_manual_input(data)
+    # add costs for home batteries
+    data = add_home_battery_costs(data)
+    # %% (3) ------ add additional sources and save cost as csv ------------------
+    # [RTD-target-multiindex-df]
+    for year in years:
+        costs = (data[[year, "unit", "source", "further description"]]
+                 .rename(columns={year: "value"}))
+        costs["value"] = costs["value"].astype(float)
+
+        # biomass is differentiated by biomass CHP and HOP
+        costs.loc[('solid biomass', 'fuel'), 'value'] = 25.2
+        costs.loc[('solid biomass', 'fuel'), 'unit'] = 'EUR/MWh_th'
+        costs.loc[('solid biomass', 'fuel'), 'source'] = source_dict["zappa"]
+
+        # add solar data from other source than DEA
+        if any([snakemake.config['solar_utility_from_vartiaien'], snakemake.config['solar_rooftop_from_etip']]):
+            costs = add_solar_from_other(costs)
+        
+        # add desalination and clean water tank storage
+        costs = add_desalinsation_data(costs)
+
+        # add electrolyzer and fuel cell efficiency from other source than DEA
+        if snakemake.config['h2_from_budischak']:
+            costs = add_h2_from_other(costs)
+
+        # add data from conventional carriers
+        costs = add_conventional_data(costs)
+        # CO2 intensity
+        costs = add_co2_intensity(costs)
+
+        # include old pypsa costs
+        check = pd.concat([costs_pypsa, costs], sort=True, axis=1)
+
+        # missing technologies
+        missing = costs_pypsa.index.levels[0].difference(costs.index.levels[0])
+        if (len(missing) & (year==years[0])):
+            print("************************************************************")
+            print("warning, in new cost assumptions the following components: ")
+            for i in range(len(missing)):
+                print("    ", i + 1, missing[i])
+            print(" are missing and the old cost assumptions are assumed.")
+            print("************************************************************")
+
+        to_add = costs_pypsa.loc[missing].drop("year", axis=1)
+        to_add.loc[:,"further description"] = " from old pypsa cost assumptions"
+        costs_tot = pd.concat([costs, to_add], sort=False)
+
+        # single components missing
+        comp_missing = costs_pypsa.index.difference(costs_tot.index)
+        if (year==years[0]):
+            print("single parameters of technologies are missing, using old PyPSA assumptions: ")
+            print(comp_missing)
+            print("old c_v and c_b values are assumed where given")
+        to_add = costs_pypsa.loc[comp_missing].drop("year", axis=1)
+        to_add.loc[:, "further description"] = " from old pypsa cost assumptions"
+        costs_tot = pd.concat([costs_tot, to_add], sort=False)
+
+        # unify the cost from DIW2010
+        costs_tot = unify_diw(costs_tot)
+        costs_tot.drop("fixed", level=1, inplace=True)
+        costs_tot.sort_index(inplace=True)
+        costs_tot = round(costs_tot, ndigits=snakemake.config.get("ndigits", 2))
+        costs_tot.to_csv([v for v in snakemake.output if str(year) in v][0])

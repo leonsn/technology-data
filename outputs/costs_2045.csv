@@ -48,9 +48,9 @@ Fischer-Tropsch,VOM,2.65,EUR/MWh_FT,"Danish Energy Agency, data_sheets_for_renew
 Fischer-Tropsch,efficiency,0.74,per unit,"Danish Energy Agency, data_sheets_for_renewable_fuels.xlsx","102 Hydrogen to Jet:  FT Liquids Output, MWh/MWh Total Input"
 Fischer-Tropsch,investment,1000.0,EUR/kW_FT/year,"Danish Energy Agency, data_sheets_for_renewable_fuels.xlsx",102 Hydrogen to Jet:  Specific investment
 Fischer-Tropsch,lifetime,25.0,years,"Danish Energy Agency, data_sheets_for_renewable_fuels.xlsx",102 Hydrogen to Jet:  Technical lifetime
-Gasnetz,FOM,2.5,%,"WEGE ZU EINEM KLIMANEUTRALEN ENERGIESYSEM, Anhang zur Studie, Fraunhofer-Institut für Solare Energiesysteme ISE, Freiburg",Gasnetz
-Gasnetz,investment,28.0,EUR/kWGas,"WEGE ZU EINEM KLIMANEUTRALEN ENERGIESYSEM, Anhang zur Studie, Fraunhofer-Institut für Solare Energiesysteme ISE, Freiburg",Gasnetz
-Gasnetz,lifetime,30.0,years,"WEGE ZU EINEM KLIMANEUTRALEN ENERGIESYSEM, Anhang zur Studie, Fraunhofer-Institut für Solare Energiesysteme ISE, Freiburg",Gasnetz
+Gasnetz,FOM,2.5,%,"WEGE ZU EINEM KLIMANEUTRALEN ENERGIESYSEM, Anhang zur Studie, Fraunhofer-Institut fÃ¼r Solare Energiesysteme ISE, Freiburg",Gasnetz
+Gasnetz,investment,28.0,EUR/kWGas,"WEGE ZU EINEM KLIMANEUTRALEN ENERGIESYSEM, Anhang zur Studie, Fraunhofer-Institut fÃ¼r Solare Energiesysteme ISE, Freiburg",Gasnetz
+Gasnetz,lifetime,30.0,years,"WEGE ZU EINEM KLIMANEUTRALEN ENERGIESYSEM, Anhang zur Studie, Fraunhofer-Institut fÃ¼r Solare Energiesysteme ISE, Freiburg",Gasnetz
 General liquid hydrocarbon storage (crude),FOM,6.25,%/year,"Stelter and Nishida 2013: https://webstore.iea.org/insights-series-2013-focus-on-energy-security , figure 7 and pg. 12 .",
 General liquid hydrocarbon storage (crude),investment,135.83,EUR/m^3,"Stelter and Nishida 2013: https://webstore.iea.org/insights-series-2013-focus-on-energy-security , pg. 8F .",
 General liquid hydrocarbon storage (crude),lifetime,30.0,years,"Stelter and Nishida 2013: https://webstore.iea.org/insights-series-2013-focus-on-energy-security , pg. 11.",
@@ -204,6 +204,21 @@ biomass HOP,VOM,3.04,EUR/MWh,"Danish Energy Agency, technology_data_for_el_and_d
 biomass HOP,efficiency,0.28,per unit,"Danish Energy Agency, technology_data_for_el_and_dh_-_0009.xlsx","09c Straw HOP:  Total efficiency , net, annual average"
 biomass HOP,investment,773.06,EUR/kW_th - heat output,"Danish Energy Agency, technology_data_for_el_and_dh_-_0009.xlsx",09c Straw HOP:  Nominal investment 
 biomass HOP,lifetime,25.0,years,"Danish Energy Agency, technology_data_for_el_and_dh_-_0009.xlsx",09c Straw HOP:  Technical lifetime
+car battery EV,FOM,0.9,%,"WEGE ZU EINEM KLIMANEUTRALEN ENERGIESYSEM, Anhang zur Studie, Fraunhofer-Institut fÃ¼r Solare Energiesysteme ISE, Freiburg",PKW Batterie- Elektromotor
+car battery EV,battery capacity,66.65,kWh,"WEGE ZU EINEM KLIMANEUTRALEN ENERGIESYSEM, Anhang zur Studie, Fraunhofer-Institut fÃ¼r Solare Energiesysteme ISE, Freiburg",PKW Batterie- Elektromotor
+car battery EV,battery drive amount,100.0,-,"WEGE ZU EINEM KLIMANEUTRALEN ENERGIESYSEM, Anhang zur Studie, Fraunhofer-Institut fÃ¼r Solare Energiesysteme ISE, Freiburg",PKW Batterie- Elektromotor
+car battery EV,battery efficiency,74.1,%,"WEGE ZU EINEM KLIMANEUTRALEN ENERGIESYSEM, Anhang zur Studie, Fraunhofer-Institut fÃ¼r Solare Energiesysteme ISE, Freiburg",PKW Batterie- Elektromotor
+car battery EV,efficiency,68.0,%,"WEGE ZU EINEM KLIMANEUTRALEN ENERGIESYSEM, Anhang zur Studie, Fraunhofer-Institut fÃ¼r Solare Energiesysteme ISE, Freiburg",PKW Batterie- Elektromotor
+car battery EV,investment,23827.0,EUR/car,"WEGE ZU EINEM KLIMANEUTRALEN ENERGIESYSEM, Anhang zur Studie, Fraunhofer-Institut fÃ¼r Solare Energiesysteme ISE, Freiburg",PKW Batterie- Elektromotor
+car battery EV,lifetime,15.0,years,"WEGE ZU EINEM KLIMANEUTRALEN ENERGIESYSEM, Anhang zur Studie, Fraunhofer-Institut fÃ¼r Solare Energiesysteme ISE, Freiburg",PKW Batterie- Elektromotor
+car conventional ICE,FOM,1.6,%,"WEGE ZU EINEM KLIMANEUTRALEN ENERGIESYSEM, Anhang zur Studie, Fraunhofer-Institut fÃ¼r Solare Energiesysteme ISE, Freiburg",PKW ICE- Flüssigtreibstoff
+car conventional ICE,efficiency,21.5,%,"WEGE ZU EINEM KLIMANEUTRALEN ENERGIESYSEM, Anhang zur Studie, Fraunhofer-Institut fÃ¼r Solare Energiesysteme ISE, Freiburg",PKW ICE- Flüssigtreibstoff
+car conventional ICE,investment,26610.0,EUR/car,"WEGE ZU EINEM KLIMANEUTRALEN ENERGIESYSEM, Anhang zur Studie, Fraunhofer-Institut fÃ¼r Solare Energiesysteme ISE, Freiburg",PKW ICE- Flüssigtreibstoff
+car conventional ICE,lifetime,15.0,years,"WEGE ZU EINEM KLIMANEUTRALEN ENERGIESYSEM, Anhang zur Studie, Fraunhofer-Institut fÃ¼r Solare Energiesysteme ISE, Freiburg",PKW ICE- Flüssigtreibstoff
+car fuelcell EV,FOM,1.2,%,"WEGE ZU EINEM KLIMANEUTRALEN ENERGIESYSEM, Anhang zur Studie, Fraunhofer-Institut fÃ¼r Solare Energiesysteme ISE, Freiburg",PKW H2- Brennstoffzelle
+car fuelcell EV,efficiency,48.0,%,"WEGE ZU EINEM KLIMANEUTRALEN ENERGIESYSEM, Anhang zur Studie, Fraunhofer-Institut fÃ¼r Solare Energiesysteme ISE, Freiburg",PKW H2- Brennstoffzelle
+car fuelcell EV,investment,28160.0,EUR/car,"WEGE ZU EINEM KLIMANEUTRALEN ENERGIESYSEM, Anhang zur Studie, Fraunhofer-Institut fÃ¼r Solare Energiesysteme ISE, Freiburg",PKW H2- Brennstoffzelle
+car fuelcell EV,lifetime,15.0,years,"WEGE ZU EINEM KLIMANEUTRALEN ENERGIESYSEM, Anhang zur Studie, Fraunhofer-Institut fÃ¼r Solare Energiesysteme ISE, Freiburg",PKW H2- Brennstoffzelle
 cement capture,FOM,3.0,%/year,"Danish Energy Agency, technology_data_for_industrial_process_heat_0002.xlsx",401.c Post comb - Cement kiln
 cement capture,capture_rate,0.95,per unit,"Danish Energy Agency, technology_data_for_industrial_process_heat_0002.xlsx",401.c Post comb - Cement kiln
 cement capture,compression-electricity-input,0.08,MWh/tCO2,"Danish Energy Agency, technology_data_for_industrial_process_heat_0002.xlsx",401.c Post comb - Cement kiln
@@ -445,6 +460,21 @@ solar-utility,investment,315.56,EUR/kW,"Danish Energy Agency, technology_data_fo
 solar-utility,lifetime,40.0,years,"Danish Energy Agency, technology_data_for_el_and_dh_-_0009.xlsx",22 Photovoltaics Large:  Technical lifetime
 solid biomass,CO2 intensity,0.3,tCO2/MWh_th,TODO,
 solid biomass,fuel,25.2,EUR/MWh_th,Is a 100% renewable European power system feasible by 2050?,
+truck battery EV,FOM,16.0,%,"WEGE ZU EINEM KLIMANEUTRALEN ENERGIESYSEM, Anhang zur Studie, Fraunhofer-Institut fÃ¼r Solare Energiesysteme ISE, Freiburg",LKW Batterie- Elektromotor
+truck battery EV,battery capacity,200.0,kWh,"WEGE ZU EINEM KLIMANEUTRALEN ENERGIESYSEM, Anhang zur Studie, Fraunhofer-Institut fÃ¼r Solare Energiesysteme ISE, Freiburg",LKW Batterie- Elektromotor
+truck battery EV,battery drive amount,100.0,%,"WEGE ZU EINEM KLIMANEUTRALEN ENERGIESYSEM, Anhang zur Studie, Fraunhofer-Institut fÃ¼r Solare Energiesysteme ISE, Freiburg",LKW Batterie- Elektromotor
+truck battery EV,battery efficiency,74.0,%,"WEGE ZU EINEM KLIMANEUTRALEN ENERGIESYSEM, Anhang zur Studie, Fraunhofer-Institut fÃ¼r Solare Energiesysteme ISE, Freiburg",LKW Batterie- Elektromotor
+truck battery EV,efficiency,74.0,%,"WEGE ZU EINEM KLIMANEUTRALEN ENERGIESYSEM, Anhang zur Studie, Fraunhofer-Institut fÃ¼r Solare Energiesysteme ISE, Freiburg",LKW Batterie- Elektromotor
+truck battery EV,investment,131200.0,EUR/truck,"WEGE ZU EINEM KLIMANEUTRALEN ENERGIESYSEM, Anhang zur Studie, Fraunhofer-Institut fÃ¼r Solare Energiesysteme ISE, Freiburg",LKW Batterie- Elektromotor
+truck battery EV,lifetime,15.0,years,"WEGE ZU EINEM KLIMANEUTRALEN ENERGIESYSEM, Anhang zur Studie, Fraunhofer-Institut fÃ¼r Solare Energiesysteme ISE, Freiburg",LKW Batterie- Elektromotor
+truck conventional ICE,FOM,15.8,%,"WEGE ZU EINEM KLIMANEUTRALEN ENERGIESYSEM, Anhang zur Studie, Fraunhofer-Institut fÃ¼r Solare Energiesysteme ISE, Freiburg",LKW ICE- Flüssigtreibstoff
+truck conventional ICE,efficiency,37.3,%,"WEGE ZU EINEM KLIMANEUTRALEN ENERGIESYSEM, Anhang zur Studie, Fraunhofer-Institut fÃ¼r Solare Energiesysteme ISE, Freiburg",LKW ICE- Flüssigtreibstoff
+truck conventional ICE,investment,113629.0,EUR/truck,"WEGE ZU EINEM KLIMANEUTRALEN ENERGIESYSEM, Anhang zur Studie, Fraunhofer-Institut fÃ¼r Solare Energiesysteme ISE, Freiburg",LKW ICE- Flüssigtreibstoff
+truck conventional ICE,lifetime,15.0,years,"WEGE ZU EINEM KLIMANEUTRALEN ENERGIESYSEM, Anhang zur Studie, Fraunhofer-Institut fÃ¼r Solare Energiesysteme ISE, Freiburg",LKW ICE- Flüssigtreibstoff
+truck fuelcell EV,FOM,12.4,%,"WEGE ZU EINEM KLIMANEUTRALEN ENERGIESYSEM, Anhang zur Studie, Fraunhofer-Institut fÃ¼r Solare Energiesysteme ISE, Freiburg",LKW H2- Brennstoffzelle
+truck fuelcell EV,efficiency,56.0,%,"WEGE ZU EINEM KLIMANEUTRALEN ENERGIESYSEM, Anhang zur Studie, Fraunhofer-Institut fÃ¼r Solare Energiesysteme ISE, Freiburg",LKW H2- Brennstoffzelle
+truck fuelcell EV,investment,122939.0,EUR/truck,"WEGE ZU EINEM KLIMANEUTRALEN ENERGIESYSEM, Anhang zur Studie, Fraunhofer-Institut fÃ¼r Solare Energiesysteme ISE, Freiburg",LKW H2- Brennstoffzelle
+truck fuelcell EV,lifetime,15.0,years,"WEGE ZU EINEM KLIMANEUTRALEN ENERGIESYSEM, Anhang zur Studie, Fraunhofer-Institut fÃ¼r Solare Energiesysteme ISE, Freiburg",LKW H2- Brennstoffzelle
 uranium,fuel,2.6,EUR/MWh_th,Lazard s Levelized Cost of Energy Analysis - Version 13.0,
 water tank charger,efficiency,0.84,per unit,"Danish Energy Agency, technology_data_catalogue_for_energy_storage.xlsx",:  efficiency from sqr(Round trip efficiency)
 water tank discharger,efficiency,0.84,per unit,"Danish Energy Agency, technology_data_catalogue_for_energy_storage.xlsx",:  efficiency from sqr(Round trip efficiency)
